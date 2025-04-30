@@ -1,9 +1,10 @@
 // Importamos nuestro modelo de usuario
+const dotenv = require('dotenv').config();
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const salt = 10;
-const SECRET = 'F0xTro7_99';
+const SECRET = process.env.SECRET_JWT;
 
 async function getUsers(req, res) {
     try {

@@ -1,5 +1,7 @@
+const dotenv = require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const SECRET = 'F0xTro7_99';
+
+const SECRET = process.env.SECRET_JWT
 
 
 function isAuth(req, res, next) {
