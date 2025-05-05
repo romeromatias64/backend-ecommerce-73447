@@ -12,8 +12,14 @@ app.use(express.json())
 // Leer archivos carpeta publica uploads
 app.use(express.static(path.join(__dirname, 'uploads')))
 
-// Habilitamos los CORS para permitir el acceso a la api desde cualquier origen
-app.use(cors())
+// Configuración de CORS
+const corsOptions = {
+    origin: 'https://frontend-ecommerce-73447.onrender.com', // Dominio del frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
+};
+
+app.use(cors(corsOptions));
 
 app.use("/api", routes)
 
