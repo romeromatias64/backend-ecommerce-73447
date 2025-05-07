@@ -50,10 +50,30 @@ function deleteProductByID(req, res) {
     res.send(`Producto con id: ${id} eliminado`)
 }
 
-function updateProductByID(req, res) {
-    const id = req.params.id
-    const product = req.body
-    res.send(`Producto con id: ${id} actualizado: ${product}`)
+async function updateProductByID(req, res) {
+    try {
+        const id = req.params.id
+        const updates = req.body
+
+        if(req.file) {
+            updates.image = req.fileData.filename // Guardamos la ruta de la imagen en el body
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true })
+
+        if(!updatedProduct) {
+            return res.status(404).send({message: "Producto no encontrado."})
+        }
+
+        res.status(200).send({
+            message: `Producto con id: ${id} actualizado correctamente`,
+            product: updatedProduct
+        })
+
+        res.send(`Producto con id: ${id} actualizado:`)
+    } catch (error) {
+        
+    }
 }
 
 module.exports = {
