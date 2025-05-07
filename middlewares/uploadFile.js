@@ -26,8 +26,7 @@ const storage = multer.diskStorage({
         const ext = path.extname(file.originalname);
         const uniqueName = v4() + ext;
 
-        console.log("Nombre de archivo único:", uniqueName);
-
+        
         // Guardar la ruta relativa en el body
         if (req.path.includes('/products')) {
             req.body.image = `uploads/products/${uniqueName}`;
@@ -35,7 +34,9 @@ const storage = multer.diskStorage({
         if (req.path.includes('/users')) {
             req.body.image = `uploads/users/${uniqueName}`;
         }
-
+        
+        console.log("Nombre de archivo único:", uniqueName);
+        
         cb(null, uniqueName);
     }
 });
