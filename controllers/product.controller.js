@@ -1,5 +1,4 @@
 const Product = require("../models/product.model")
-const fileUpload = require("../middlewares/uploadFile")
 const { path } = require("../app")
 
 
