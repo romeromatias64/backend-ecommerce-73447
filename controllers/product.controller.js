@@ -1,5 +1,6 @@
 const Product = require("../models/product.model")
 const fileUpload = require("../middlewares/uploadFile")
+const { path } = require("../app")
 
 
 async function createProduct(req, res) {
@@ -46,8 +47,31 @@ function  getProductByID(req, res) {
 
 
 function deleteProductByID(req, res) {
-    const id = req.params.id
-    res.send(`Producto con id: ${id} eliminado`)
+    try {
+        const id = req.params.id
+
+        const deletedProduct = Product.findByIdAndDelete(id);
+
+        if(!deletedProduct) {
+            return res.status(404).send({message: "Producto no encontrado."})
+        }
+
+        if(deletedProduct.image) {
+            const imagePath = path.join(__dirname, "../uploads/products", deletedProduct.image)
+        }
+
+        if(fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath) // Eliminar la imagen del servidor
+        }
+
+        res.status(200).send({
+            message: `Producto con id: ${id} eliminado correctamente`,
+            product: deletedProduct
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "No se pudo eliminar el producto" })
+    }
 }
 
 async function updateProductByID(req, res) {
