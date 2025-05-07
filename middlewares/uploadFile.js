@@ -24,28 +24,22 @@ const storage = multer.diskStorage({
 
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        const name = v4() + ext;
+        const uniqueName = v4() + ext;
+
+        console.log("Nombre de archivo único:", uniqueName);
 
         // Guardar la ruta relativa en el body
         if (req.path.includes('/products')) {
-            req.body.image = `uploads/products/${name}`;
+            req.body.image = `uploads/products/${uniqueName}`;
         }
         if (req.path.includes('/users')) {
-            req.body.image = `uploads/users/${name}`;
+            req.body.image = `uploads/users/${uniqueName}`;
         }
 
-        cb(null, name);
+        cb(null, uniqueName);
     }
 });
 
 const upload = multer({ storage }).single("image");
 
-module.exports = (req, res, next) => {
-    upload(req, res, (err) => {
-        if (err) {
-            console.error("Error en multer:", err);
-            return res.status(500).send({ message: "Error al procesar el archivo" });
-        }
-        next();
-    });
-};
+module.exports = upload
