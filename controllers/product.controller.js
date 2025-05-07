@@ -1,5 +1,5 @@
 const Product = require("../models/product.model")
-const { path } = require("../app")
+// const { path } = require("../app")
 const fs = require("fs")
 const path = require("path")
 
