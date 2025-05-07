@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 
 // Leer archivos carpeta publica uploads
-app.use(express.static(path.join(__dirname, 'uploads')))
+app.use(express.static("uploads"))
 
 // Configuración de CORS
 const corsOptions = {
