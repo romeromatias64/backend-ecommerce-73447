@@ -26,7 +26,7 @@ router.post("/products", upload, productController.createProduct)
 router.delete("/products/:id", productController.deleteProductByID)
 
 // Ruta para actualizar un producto por ID
-router.put("/products/:id", upload, productController.updateProductByID)
+router.put("/products/:id", upload.single("image"), productController.updateProductByID);
 
 // Exportamos el router para usarlo en otro archivo
 module.exports = router

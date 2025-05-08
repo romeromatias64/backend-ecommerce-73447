@@ -11,7 +11,7 @@ async function createProduct(req, res) {
         console.log(req.file) // Para ver el archivo que se subió
 
         if(req.file) {
-            req.body.image = req.file.path // Guardamos la ruta de la imagen en el body
+            req.body.image = req.file.filename // Guardamos la ruta de la imagen en el body
         }
 
         const product = new Product(req.body)
@@ -61,7 +61,7 @@ async function deleteProductByID(req, res) {
             const imagePath = path.join(
                 __dirname, 
                 "../uploads/products", 
-                deletedProduct.image
+                path.basename(deletedProduct.image) // Obtener solo el nombre del archivo
             );
 
             if (fs.existsSync(imagePath)) {
@@ -87,7 +87,7 @@ async function updateProductByID(req, res) {
         const updates = req.body
 
         if(req.file) {
-            updates.image = req.fileData.filename // Guardamos la ruta de la imagen en el body
+            updates.image = req.file.filename // Guardamos la ruta de la imagen en el body
         }
 
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true })
@@ -101,9 +101,9 @@ async function updateProductByID(req, res) {
             product: updatedProduct
         })
 
-        res.send(`Producto con id: ${id} actualizado:`)
     } catch (error) {
-        
+        console.error("Error al actualizar: ", error)
+        res.status(500).send({ message: "Error interno del servidor" })
     }
 }
 
