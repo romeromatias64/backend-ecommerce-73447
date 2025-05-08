@@ -47,7 +47,7 @@ function  getProductByID(req, res) {
 }
 
 
-function deleteProductByID(req, res) {
+async function deleteProductByID(req, res) {
     try {
         const id = req.params.id
 
