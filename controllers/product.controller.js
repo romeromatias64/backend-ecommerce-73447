@@ -49,29 +49,35 @@ function  getProductByID(req, res) {
 
 async function deleteProductByID(req, res) {
     try {
-        const id = req.params.id
+        const id = req.params.id;
 
         const deletedProduct = await Product.findByIdAndDelete(id);
 
-        if(!deletedProduct) {
-            return res.status(404).send({message: "Producto no encontrado."})
+        if (!deletedProduct) {
+            return res.status(404).send({ message: "Producto no encontrado." });
         }
 
-        if(deletedProduct.image) {
-            const imagePath = path.join(__dirname, "../uploads/products", deletedProduct.image)
+        if (deletedProduct.image) {
+            const imagePath = path.join(
+                __dirname, 
+                "../uploads/products", 
+                deletedProduct.image
+            );
+
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath); // Eliminar imagen del servidor
+            }
         }
 
-        if(fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath) // Eliminar la imagen del servidor
-        }
-
+        // 3. Respuesta exitosa
         res.status(200).send({
-            message: `Producto con id: ${id} eliminado correctamente`,
+            message: "Producto eliminado correctamente",
             product: deletedProduct
-        })
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: "No se pudo eliminar el producto" })
+        console.error("Error al eliminar:", error);
+        res.status(500).send({ message: "Error interno del servidor" });
     }
 }
 
