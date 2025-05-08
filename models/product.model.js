@@ -10,10 +10,21 @@ const productSchema = new Schema({
         required: true,
         trim: true,
     },
+    originalPrice: {
+        type: Number,
+        required: true,
+    },
     price: {
         type: Number,
         required: true,
         min: 0,
+    },
+    discountPercentage: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100,
+        required: true,
     },
     image: {
         type: String,
