@@ -73,7 +73,7 @@ async function updateUserByID(req, res) {
         const id = req.params.id;
         const user = req.body;
 
-        data.password = undefined; // Para no actualizar la contraseña
+        user.password = undefined; // Para no actualizar la contraseña
 
         data.updatedAt = Date.now(); // Actualizamos la fecha de actualización
 

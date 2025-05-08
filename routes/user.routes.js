@@ -8,7 +8,7 @@ router.get("/users", userController.getUsers)
 router.post("/users", userController.createUser)
 
 // Ruta para obtener un usuario por id
-router.get("/users/:id{/:otro}", userController.getUserByID) // {/:otro} es un ejemplo de ruta con parámetros opcionales
+router.get("/users/:id", userController.getUserByID)
 
 // Ruta para eliminar un usuario por id
 router.delete("/users/:id", userController.deleteUserByID)
