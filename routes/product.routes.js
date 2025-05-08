@@ -20,7 +20,7 @@ router.get("/uploads/products/:filename", (req, res) => {
 })
 
 // Ruta para crear un producto
-router.post("/products", upload, productController.createProduct)
+router.post("/products", upload.single("image"), productController.createProduct)
 
 // Ruta para eliminar un producto por ID
 router.delete("/products/:id", productController.deleteProductByID)
