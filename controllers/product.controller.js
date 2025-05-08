@@ -51,7 +51,7 @@ function deleteProductByID(req, res) {
     try {
         const id = req.params.id
 
-        const deletedProduct = Product.findByIdAndDelete(id);
+        const deletedProduct = await Product.findByIdAndDelete(id);
 
         if(!deletedProduct) {
             return res.status(404).send({message: "Producto no encontrado."})
