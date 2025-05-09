@@ -9,7 +9,7 @@ const SECRET = process.env.SECRET_JWT;
 async function getUsers(req, res) {
     try {
 
-        const users = await User.find({}).select({ password: 0, __v: 0 }).sort({name: 1}).collation({locale:"es"});
+        const users = await User.find({}).select({ password: 0, __v: 0 }).sort({ name: 1 }).collation({ locale: "es" });
         res.status(200).send(users);
 
     } catch (error) {
@@ -154,11 +154,12 @@ async function loginUser(req, res) {
             });
         }
 
+        const tokenData = { ...user.toJSON(), avatar: user.avatar || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png" }
         user.password = undefined;
         // b. Vamos a establecer o generar un token para que el usuario pueda corroborar en futuras peticiones que es el mismo usuario que se logueo
         // Los token se utilizan para autenticar a un usuario y verificar su identidad
         // En este caso vamos a usar JWT (JSON Web Token)
-        const token = jwt.sign(user.toJSON(), SECRET, {
+        const token = jwt.sign(tokenData, SECRET, {
             expiresIn: '1h' // El token va a expirar en 1 hora
         });
 
@@ -177,11 +178,27 @@ async function loginUser(req, res) {
     }
 }
 
+async function updateAvatar(req, res) {
+    try {
+        const id = req.params.id;
+        const avatarPath = req.fileData.filename; // Nombre del archivo subido
+        const userUpdated = await User.findByIdAndUpdate(
+            id,
+            { avatar: avatarPath },
+            { new: true }
+        );
+        res.status(200).send(userUpdated);
+    } catch (error) {
+        res.status(500).send("Error al actualizar el avatar");
+    }
+}
+
 module.exports = {
     getUsers,
     getUserByID,
     createUser,
     deleteUserByID,
     updateUserByID,
-    loginUser
+    loginUser,
+    updateAvatar
 };

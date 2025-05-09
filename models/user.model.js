@@ -33,6 +33,7 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String,
+        default: "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
     },
     role: {
         type: String,
