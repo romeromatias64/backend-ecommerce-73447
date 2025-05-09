@@ -17,6 +17,8 @@ const corsOptions = {
     origin: 'https://frontend-ecommerce-73447.onrender.com', // Dominio del frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
     allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
+    credentials: true, // Permitir tokens
+    exposeHeaders: ['Authorization'], // Headers expuestos
 };
 
 app.use(cors(corsOptions));

@@ -9,10 +9,10 @@ const storage = multer.diskStorage({
 
         // Definimos el directorio de destino según el tipo de archivo
         if (req.path.includes('/products')) {
-            dir = path.join('/tmp', '../uploads/products');
+            dir = path.join('/tmp', 'uploads/products');
         }
         if (req.path.includes('/users')) {
-            dir = path.join('/tmp', '../uploads/users');
+            dir = path.join('/tmp', 'uploads/users');
         }
 
         if (!fs.existsSync(dir)) {

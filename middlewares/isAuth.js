@@ -5,9 +5,8 @@ const SECRET = process.env.SECRET_JWT
 
 
 function isAuth(req, res, next) {
-    const token = req.headers.access_token
-
-    console.log(token)
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1]; // Extraer el token del encabezado de autorización
 
     if(!token) {
         return res.status(401).send('No tenes acceso a esta ruta');
