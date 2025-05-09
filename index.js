@@ -9,8 +9,8 @@ const mongo_uri = process.env.MONGO_URI
 
 // Scriopt para crear directorios al iniciar 
 const uploadDirs = [
-    path.join("/tmp", "../uploads/products"),
-    path.join("/tmp", "../uploads/users")
+    path.join("/tmp", "uploads/products"),
+    path.join("/tmp", "uploads/users")
 ];
 
 uploadDirs.forEach(dir => {
