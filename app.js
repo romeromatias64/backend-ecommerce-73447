@@ -12,6 +12,10 @@ app.use(express.json())
 // Leer archivos carpeta publica uploads
 app.use('/uploads', express.static(path.join('/tmp', 'uploads')));
 
+// Servir archivos desde /tmp/uploads/users y /tmp/uploads/products
+app.use("/api/uploads/products", express.static(path.join('/tmp', 'uploads/products')))
+app.use("/api/uploads/users", express.static(path.join('/tmp', 'uploads/users')))
+
 // Configuración de CORS
 const corsOptions = {
     origin: 'https://frontend-ecommerce-73447.onrender.com', // Dominio del frontend
