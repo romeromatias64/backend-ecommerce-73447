@@ -5,8 +5,8 @@ const upload = require("../middlewares/uploadFile")
 // Ruta para obtener los usuarios
 router.get("/users", userController.getUsers)
 
-// Ruta para crear un usuario
-router.post("/users", userController.createUser)
+// Ruta para crear un usuario (con subida de avatar)
+router.post("/users", upload.single("avatar"), userController.createUser)
 
 // Ruta para obtener un usuario por id
 router.get("/users/:id", userController.getUserByID)
@@ -19,6 +19,7 @@ router.put("/users/:id", userController.updateUserByID)
 
 // Ruta para logear un usuario
 router.post("/login", userController.loginUser)
+
 
 router.put("/users/:id/avatar", upload.single("avatar"), userController.updateAvatar)
 

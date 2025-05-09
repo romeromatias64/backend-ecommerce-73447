@@ -102,14 +102,15 @@ async function updateUserByID(req, res) {
 
 async function createUser(req, res) {
     try {
-        const user = new User(req.body);
+        const userData = {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            avatar: req.fileData.filename || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
+        }
 
-        user.password = await bcrypt.hash(user.password, salt); // Encriptar la contraseña con bcrypt
-
-        const newUser = await user.save();
-
-        // // Encriptar la contraseña
-        // newUser.password = undefined // Para no enviar la contraseña en la respuesta
+        userData.password = await bcrypt.hash(userData.password, salt);
+        const newUser = await new User(userData).save();
 
         res.status(201).send({
             message: 'Usuario creado correctamente',
@@ -155,6 +156,7 @@ async function loginUser(req, res) {
         }
 
         const tokenData = { ...user.toJSON(), avatar: user.avatar || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png" }
+        
         user.password = undefined;
         // b. Vamos a establecer o generar un token para que el usuario pueda corroborar en futuras peticiones que es el mismo usuario que se logueo
         // Los token se utilizan para autenticar a un usuario y verificar su identidad
