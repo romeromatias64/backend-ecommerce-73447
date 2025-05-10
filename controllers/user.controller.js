@@ -113,7 +113,7 @@ async function createUser(req, res) {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            avatar: req.fileData?.filename || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
+            avatar: req.file?.filename || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
         }
 
         userData.password = await bcrypt.hash(userData.password, salt);
