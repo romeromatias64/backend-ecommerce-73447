@@ -9,9 +9,8 @@ const app = express()
 // Middleware para manejar/leer el body de las peticiones
 app.use(express.json())
 
-// Servir archivos desde /tmp/uploads/users y /tmp/uploads/products
-app.use("/api/uploads/products", express.static(path.join('/tmp', 'uploads/products')))
-app.use("/api/uploads/users", express.static(path.join('/tmp', 'uploads/users')))
+// Servir archivos estaticos desde la carpeta uploads
+app.use("/uploads", express.static("uploads"))
 
 // Configuración de CORS
 const corsOptions = {
