@@ -28,8 +28,6 @@ const storage = multer.diskStorage({
 
         req.fileData = { filename: uniqueName } // Guardar solo el nombre del archivo en el body
         
-        console.log("Nombre de archivo único:", uniqueName);
-        
         cb(null, uniqueName);
     }
 });

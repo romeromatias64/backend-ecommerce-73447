@@ -31,8 +31,6 @@ async function getUserByID(req, res) {
             });
         }
 
-        console.log(user);
-
         res.status(200).send({
             message: 'Se obtuvo el usuario',
             user
@@ -129,7 +127,7 @@ async function createUser(req, res) {
 
 //? Funcion para logear un usuario
 
-async function loginUser(req, res) {
+async function login(req, res) {
     try {
         // 1. Vamos a recibir desde la aplicacion un email y un password
         const { email, password } = req.body;

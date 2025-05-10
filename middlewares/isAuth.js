@@ -26,8 +26,6 @@ function isAuth(req, res, next) {
 function isAdmin(req, res, next) {
     const token = req.headers.access_token
 
-    console.log(token)
-
     if(!token) {
         return res.status(401).send('No tenes acceso a esta ruta');
     }
