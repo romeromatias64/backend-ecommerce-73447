@@ -189,7 +189,7 @@ async function loginUser(req, res) {
 async function updateAvatar(req, res) {
     try {
         const id = req.params.id;
-        const avatarPath = req.fileData.filename; // Nombre del archivo subido
+        const avatarPath = req.file.filename; // Nombre del archivo subido
         const userUpdated = await User.findByIdAndUpdate(
             id,
             { avatar: avatarPath },
