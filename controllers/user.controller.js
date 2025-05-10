@@ -12,7 +12,7 @@ async function getUsers(req, res) {
         const users = await User.find({}).select({ password: 0, __v: 0 }).sort({ name: 1 }).collation({ locale: "es" });
         res.status(200).send({
             message: 'Se obtuvieron los usuarios',
-            users
+            users: users
         });
 
     } catch (error) {
@@ -84,7 +84,7 @@ async function updateUserByID(req, res) {
                 message: 'No se puede actualizar el usuario'
             });
         }
-        
+
         return res.status(200).send({
             message: `El usuario con la id: ${req.params.id} fue actualizado correctamente`,
             userUpdated
