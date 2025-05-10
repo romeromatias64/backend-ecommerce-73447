@@ -9,7 +9,7 @@ const AWS_URL = process.env.AWS_URL
 async function createProduct(req, res) {
     try {
         if(req.file) {
-            req.body.image = `${AWS_URL}/products/${req.fileData.filename}` // Guardamos la ruta de la imagen en el body
+            req.body.image = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/products/${req.fileData.filename}` // Guardamos la ruta de la imagen en el body
         }
 
         const product = new Product(req.body)
@@ -54,19 +54,6 @@ async function deleteProductByID(req, res) {
             return res.status(404).send({ message: "Producto no encontrado." });
         }
 
-        if (deletedProduct.image) {
-            const imagePath = path.join(
-                __dirname, 
-                "../uploads/products", 
-                path.basename(deletedProduct.image) // Obtener solo el nombre del archivo
-            );
-
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath); // Eliminar imagen del servidor
-            }
-        }
-
-        // 3. Respuesta exitosa
         res.status(200).send({
             message: "Producto eliminado correctamente",
             product: deletedProduct

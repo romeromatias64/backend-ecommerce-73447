@@ -8,10 +8,6 @@ router.get("/products", (productController.getProducts))
 // Ruta para obtener un producto por ID
 router.get("/products/:id", productController.getProductByID)
 
-
-const express = require("express");
-router.use("/uploads/products", express.static("uploads/products"));
-
 // Ruta para crear un producto
 router.post("/products", upload, productController.createProduct)
 
