@@ -21,6 +21,4 @@ router.post("/login", userController.loginUser)
 // Ruta para actualizar el avatar de un usuario
 router.put("/users/:id/avatar", upload, userController.updateAvatar)
 
-// Ruta para cambiar la contraseña de un usuario
-
 module.exports = router
