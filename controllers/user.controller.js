@@ -10,7 +10,10 @@ async function getUsers(req, res) {
     try {
 
         const users = await User.find({}).select({ password: 0, __v: 0 }).sort({ name: 1 }).collation({ locale: "es" });
-        res.status(200).send(users);
+        res.status(200).send({
+            message: 'Se obtuvieron los usuarios',
+            users
+        });
 
     } catch (error) {
         console.log(error);
