@@ -71,29 +71,25 @@ async function deleteUserByID(req, res) {
 
 async function updateUserByID(req, res) {
     try {
-        const id = req.params.id;
-        const user = req.body;
-
-        user.password = undefined; // Para no actualizar la contraseña
-
-        user.updatedAt = Date.now(); // Actualizamos la fecha de actualización
-
         const userUpdated = await User.findByIdAndUpdate(
-            id,
-            { ...user, updatedAt: Date.now() },
-            { new: true },
-        ).select({ password: 0, __v: 0 });
+            req.params.id,
+            { ...req.body, updatedAt: Date.now() },
+            { new: true }
+        ).select("-password -__v"); // Excluir campos sensibles
+
+        res.status(200).send(userUpdated); // Devolver el usuario completo actualizado
 
         if (!userUpdated) {
             return res.status(404).send({
                 message: 'No se puede actualizar el usuario'
             });
         }
-
+        
         return res.status(200).send({
-            message: `El usuario con la id: ${id}, fue actualizado correctamente`,
-            user: userUpdated
+            message: `El usuario con la id: ${req.params.id} fue actualizado correctamente`,
+            userUpdated
         });
+
     } catch (error) {
         console.log(error);
         return res.status(500).send({
