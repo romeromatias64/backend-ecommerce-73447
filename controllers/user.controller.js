@@ -112,9 +112,14 @@ async function createUser(req, res) {
         userData.password = await bcrypt.hash(userData.password, salt);
         const newUser = await new User(userData).save();
 
+        const token = jwt.sign(newUser.toJSON(), SECRET, {
+            expiresIn: '1h' // El token va a expirar en 1 hora
+        })
+
         res.status(201).send({
             message: 'Usuario creado correctamente',
-            user: newUser
+            user: newUser,
+            token
         });
     } catch (error) {
         console.log(error);
