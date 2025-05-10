@@ -17,9 +17,9 @@ app.use("/api/uploads/users", express.static(path.join('/tmp', 'uploads/users'))
 const corsOptions = {
     origin: 'https://frontend-ecommerce-73447.onrender.com', // Dominio del frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'], // Headers permitidos
     credentials: true, // Permitir tokens
-    exposeHeaders: ['Authorization'], // Headers expuestos
+    preflightContinue: false, // Continuar con la siguiente función de middleware
 };
 
 app.use(cors(corsOptions));
