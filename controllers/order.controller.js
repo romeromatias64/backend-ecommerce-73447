@@ -6,19 +6,24 @@ async function createOrder(req, res) {
         const data = req.body;
         const order = new Order(data);
 
-        await checkOrderPrice(order.products)
+        // Validar precios
+        await checkOrderPrice(order.products);
 
+        // Guardar la orden en la base de datos
         const newOrder = await order.save();
-        return res.status(201).send({
+        console.log("Orden creada:", newOrder);
+
+        return res.status(201).json({ 
             message: 'Orden creada con éxito',
-            order: newOrder
+            order: newOrder 
         });
+
     } catch (error) {
-        res.status(400).send({ 
+        console.error("Error al crear la orden:", error.message);
+        return res.status(400).json({ 
             message: error.message,
-            error: true
+            error: true 
         });
-        console.error(error);
     }
 }
 
