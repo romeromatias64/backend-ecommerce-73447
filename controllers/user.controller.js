@@ -75,7 +75,7 @@ async function updateUserByID(req, res) {
         const updateData = { ...restData, updatedAt: Date.now() };
 
         if(password) {
-            updateData.password = await bcrypt.hash(password, 10);
+            updateData.password = await bcrypt.hash(password, salt);
         }
 
 

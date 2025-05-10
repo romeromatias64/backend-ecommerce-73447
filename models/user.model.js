@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema =  mongoose.Schema;
 const bcrypt = require('bcryptjs');
+const salt = 10;
 
 const userSchema = new Schema({
     name: {
@@ -57,8 +58,7 @@ userSchema.pre('save', async function(next) {
         // Solo hashear si la contraseña fue modificada (o es nueva)
         if (!this.isModified('password')) return next();
 
-        // Generar salt y hashear la contraseña
-        const salt = await bcrypt.genSalt(10);
+        // hashear la contraseña
         this.password = await bcrypt.hash(this.password, salt);
         
         // Actualizar updatedAt
