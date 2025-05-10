@@ -71,11 +71,19 @@ async function deleteUserByID(req, res) {
 
 async function updateUserByID(req, res) {
     try {
+        const { password, ...restData } = req.body;
+        const updateData = { ...restData, updatedAt: Date.now() };
+
+        if(password) {
+            updateData.password = await bcrypt.hash(password, 10);
+        }
+
+
         const userUpdated = await User.findByIdAndUpdate(
             req.params.id,
             { ...req.body, updatedAt: Date.now() },
             { new: true }
-        ).select("-password -__v"); // Excluir campos sensibles
+        ).select("-password -__v");
 
         if (!userUpdated) {
             return res.status(404).send({
