@@ -3,11 +3,13 @@ const Product = require("../models/product.model")
 const fs = require("fs")
 const path = require("path")
 
+const AWS_URL = process.env.AWS_URL
+
 
 async function createProduct(req, res) {
     try {
         if(req.file) {
-            req.body.image = req.file.filename // Guardamos la ruta de la imagen en el body
+            req.body.image = `${AWS_URL}/products/${req.fileData.filename}` // Guardamos la ruta de la imagen en el body
         }
 
         const product = new Product(req.body)
@@ -82,7 +84,7 @@ async function updateProductByID(req, res) {
         const updates = req.body
 
         if(req.file) {
-            updates.image = req.file.filename // Guardamos la ruta de la imagen en el body
+            updates.image = req.fileData.filename // Guardamos la ruta de la imagen en el body
         }
 
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true })

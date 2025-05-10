@@ -9,9 +9,6 @@ const app = express()
 // Middleware para manejar/leer el body de las peticiones
 app.use(express.json())
 
-// Servir archivos estaticos desde la carpeta uploads
-app.use("/uploads", express.static("uploads"))
-
 // Configuración de CORS
 const corsOptions = {
     origin: 'https://frontend-ecommerce-73447.onrender.com', // Dominio del frontend

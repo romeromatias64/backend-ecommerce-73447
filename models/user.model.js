@@ -52,27 +52,4 @@ const userSchema = new Schema({
     },
 })
 
-// // Middleware para hashear la contraseña antes de guardar
-// userSchema.pre('save', async function(next) {
-//     try {
-//         // Solo hashear si la contraseña fue modificada (o es nueva)
-//         if (!this.isModified('password')) return next();
-
-//         // hashear la contraseña
-//         this.password = await bcrypt.hash(this.password, salt);
-        
-//         // Actualizar updatedAt
-//         this.updatedAt = Date.now();
-        
-//         next();
-//     } catch (error) {
-//         next(error);
-//     }
-// });
-
-// // Metodo para comparar contraseñas
-// userSchema.methods.comparePassword = async function(candidatePassword) {
-//     return await bcrypt.compare(candidatePassword, this.password);
-// }
-
 module.exports = mongoose.model("User", userSchema)

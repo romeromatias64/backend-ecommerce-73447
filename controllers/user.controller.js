@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const salt = 10;
 const SECRET = process.env.SECRET_JWT;
 
+const AWS_URL = process.env.AWS_URL;
+
 async function getUsers(req, res) {
     try {
 
@@ -113,7 +115,7 @@ async function createUser(req, res) {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            avatar: req.file?.filename || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
+            avatar: req.file ? `${AWS_URL}/users/${req.fileData.filename}` : "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
         }
 
         userData.password = await bcrypt.hash(userData.password, salt);
@@ -167,7 +169,7 @@ async function loginUser(req, res) {
         const tokenData = { ...user.toJSON(), avatar: user.avatar || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png" }
         
         user.password = undefined;
-   
+
         const token = jwt.sign(tokenData, SECRET, {
             expiresIn: '1h' 
         });
@@ -189,10 +191,10 @@ async function loginUser(req, res) {
 async function updateAvatar(req, res) {
     try {
         const id = req.params.id;
-        const avatarPath = req.file.filename; // Nombre del archivo subido
+        const avatarURL = `${AWS_URL}/users/${req.fileData.filename}`; // Nombre del archivo subido
         const userUpdated = await User.findByIdAndUpdate(
             id,
-            { avatar: avatarPath },
+            { avatar: avatarURL },
             { new: true }
         );
         res.status(200).send(userUpdated);

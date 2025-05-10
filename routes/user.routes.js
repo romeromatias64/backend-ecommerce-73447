@@ -7,7 +7,7 @@ const upload = require("../middlewares/uploadFile")
 router.get("/users", isAuth, isAdmin, userController.getUsers)
 
 // Ruta para crear un usuario (con subida de avatar)
-router.post("/users", upload.single("avatar"), userController.createUser)
+router.post("/users", upload, userController.createUser)
 
 // Ruta para eliminar un usuario por id
 router.delete("/users/:id", isAuth, isAdmin, userController.deleteUserByID)
@@ -18,8 +18,8 @@ router.put("/users/:id", isAuth, isAdmin, userController.updateUserByID)
 // Ruta para logear un usuario
 router.post("/login", userController.loginUser)
 
-
-router.put("/users/:id/avatar", upload.single("avatar"), userController.updateAvatar)
+// Ruta para actualizar el avatar de un usuario
+router.put("/users/:id/avatar", upload, userController.updateAvatar)
 
 // Ruta para cambiar la contraseña de un usuario
 
