@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Order = require('../models/order.model');
 const Product = require('../models/product.model');
 
@@ -29,6 +30,10 @@ async function createOrder(req, res) {
 
 async function checkOrderPrice(products) {
     for(const item of products) {
+        if(!mongoose.Types.ObjectId.isValid(item.product)) {
+            throw new Error('ID de producto inválido: ' + item.product);
+        }
+
         const productDB = await Product.findById(item.product);
         if(!productDB) {
             throw new Error('no se encontró el producto con ID: ' + item.product);
