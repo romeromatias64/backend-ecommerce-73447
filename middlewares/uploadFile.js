@@ -56,6 +56,13 @@ module.exports = (req, res, next) => {
         if (req.path.includes("/users")) folder = "users";
         if (req.path.includes("/products")) folder = "products";
 
+        // Obtener el archivo según la ruta
+        if (req.files?.avatar) {
+            req.file = req.files.avatar[0]; // Para usuarios
+        } else if (req.files?.image) {
+            req.file = req.files.image[0]; // Para productos
+        }
+
         // Subir a S3 y guardar el nombre en req.fileData
         if (req.file) {
             try {

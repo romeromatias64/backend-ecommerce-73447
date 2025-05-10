@@ -8,8 +8,15 @@ const AWS_URL = process.env.AWS_URL
 
 async function createProduct(req, res) {
     try {
-        if(req.file) {
+        // Si no se envía originalPrice, se asigna el valor de price
+        if (!req.body.originalPrice) {
+            req.body.originalPrice = req.body.price;
+        }
+
+        if(req.fileData?.filename) {
             req.body.image = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/products/${req.fileData.filename}` // Guardamos la ruta de la imagen en el body
+        } else {
+            req.body.image = "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
         }
 
         const product = new Product(req.body)
@@ -70,8 +77,8 @@ async function updateProductByID(req, res) {
         const id = req.params.id
         const updates = req.body
 
-        if(req.file) {
-            updates.image = req.fileData.filename // Guardamos la ruta de la imagen en el body
+        if(req.fileData.filename) {
+            updates.image = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/products/${req.fileData.filename}`
         }
 
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true })
