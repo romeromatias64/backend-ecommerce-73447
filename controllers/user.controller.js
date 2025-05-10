@@ -78,7 +78,11 @@ async function updateUserByID(req, res) {
 
         user.updatedAt = Date.now(); // Actualizamos la fecha de actualización
 
-        const userUpdated = await User.findByIdAndUpdate(id, user, { new: true }); // new: true para que devuelva el usuario actualizado
+        const userUpdated = await User.findByIdAndUpdate(
+            id,
+            { ...user, updatedAt: Date.now() },
+            { new: true },
+        ).select({ password: 0, __v: 0 });
 
         if (!userUpdated) {
             return res.status(404).send({

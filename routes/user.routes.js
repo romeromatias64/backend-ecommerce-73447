@@ -4,7 +4,7 @@ const { isAuth, isAdmin } = require("../middlewares/isAuth")
 const upload = require("../middlewares/uploadFile")
 
 // Ruta para obtener los usuarios
-router.get("/users", userController.getUsers)
+router.get("/users", isAuth, isAdmin, userController.getUsers)
 
 // Ruta para crear un usuario (con subida de avatar)
 router.post("/users", upload.single("avatar"), userController.createUser)
