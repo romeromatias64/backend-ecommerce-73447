@@ -115,7 +115,7 @@ async function createUser(req, res) {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            avatar: req.file ? `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/products/${req.fileData.filename}` : "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
+            avatar: req.file ? `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/users/${req.fileData.filename}` : "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png"
         }
 
         userData.password = await bcrypt.hash(userData.password, salt);
