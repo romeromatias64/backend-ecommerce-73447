@@ -22,25 +22,27 @@ const uploadToS3 = async (file, folder) => {
         Key: `${folder}/${uniqueName}`,
         Body: file.buffer,
         ContentType: file.mimetype,
+        ACL: "public-read", // Permiso de lectura público
     };
 
     await s3Client.send(new PutObjectCommand(params));
     return uniqueName;
 };
 
-// Configuración de Multer en memoria (no guarda archivos localmente)
+// Configuración de Multer en memoria
 const storage = multer.memoryStorage();
 
 // Middleware personalizado para detectar la ruta (users/products)
 const upload = multer({
     storage: storage,
-    fileFilter: (req, file, cb) => { // Valida tipos de archivo
+    fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith("image/")) {
             cb(null, true);
         } else {
             cb(new Error("Solo se permiten imágenes"), false);
         }
-    }
+    },
+    limits: { fileSize: 5 * 1024 * 1024 }, // Límite de 5MB
 }).fields([
     { name: "avatar", maxCount: 1 },    // Para usuarios
     { name: "image", maxCount: 1 },     // Para productos
@@ -49,7 +51,10 @@ const upload = multer({
 // Middleware final que sube a S3
 module.exports = (req, res, next) => {
     upload(req, res, async (err) => {
-        if (err) return res.status(500).send("Error al subir el archivo");
+        if (err) {
+            console.error("Error en Multer:", err);
+            return res.status(500).send("Error al subir el archivo");
+        }
 
         // Determinar la carpeta en S3 según la ruta
         let folder;
@@ -58,16 +63,24 @@ module.exports = (req, res, next) => {
 
         // Obtener el archivo según la ruta
         if (req.files?.avatar) {
-            req.file = req.files.avatar[0]; // Para usuarios
+            req.file = req.files.avatar[0];
         } else if (req.files?.image) {
-            req.file = req.files.image[0]; // Para productos
+            req.file = req.files.image[0];
         }
 
         // Subir a S3 y guardar el nombre en req.fileData
         if (req.file) {
             try {
+                // Validar tipo de archivo
+                if (!req.file.mimetype.startsWith("image/")) {
+                    return res.status(400).send("Formato de imagen no válido");
+                }
+
                 const filename = await uploadToS3(req.file, folder);
-                req.fileData = { filename };
+                req.fileData = { 
+                    filename,
+                    url: `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${folder}/${filename}`
+                };
                 next();
             } catch (error) {
                 console.error("Error subiendo a S3:", error);
