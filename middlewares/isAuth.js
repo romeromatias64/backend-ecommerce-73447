@@ -24,22 +24,24 @@ function isAuth(req, res, next) {
 
 
 function isAdmin(req, res, next) {
-    const token = req.headers.access_token
+    const authHeader = req.headers.authorization;
 
-    if(!token) {
-        return res.status(401).send('No tenes acceso a esta ruta');
+    if(!authHeader) {
+        return res.status(401).send('Acceso denegado');
     }
+
+    const token = authHeader.split(' ')[1];
 
     jwt.verify(token, SECRET, (error, decoded) => {
         if(error) {
-            return res.status(401).send("Token inválido")
+            return res.status(401).send("Token inválido o expirado")
+        }
+
+        if(decoded.role !== 'admin') {
+            return res.status(403).send("No tenes permisos para acceder a esta ruta")
         }
 
         req.user = decoded
-        if(decoded.role !== "admin") {
-            return res.status(401).send("No tenes acceso a esta ruta")
-        }
-
         next()
     })
 }

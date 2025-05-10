@@ -73,7 +73,7 @@ async function updateUserByID(req, res) {
 
         user.password = undefined; // Para no actualizar la contraseña
 
-        data.updatedAt = Date.now(); // Actualizamos la fecha de actualización
+        user.updatedAt = Date.now(); // Actualizamos la fecha de actualización
 
         const userUpdated = await User.findByIdAndUpdate(id, user, { new: true }); // new: true para que devuelva el usuario actualizado
 
@@ -127,7 +127,7 @@ async function createUser(req, res) {
 
 //? Funcion para logear un usuario
 
-async function login(req, res) {
+async function loginUser(req, res) {
     try {
         // 1. Vamos a recibir desde la aplicacion un email y un password
         const { email, password } = req.body;
