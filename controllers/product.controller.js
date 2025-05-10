@@ -22,8 +22,8 @@ async function createProduct(req, res) {
         })
         
     } catch (error) {
-        console.log(error)
-        res.status(500).send({ message: "Error al crear el producto" })
+        console.error("Error en createProduct: ", error)
+        res.status(500).send({ message: "Error al crear el producto", error: error.message })
     }
 }
 

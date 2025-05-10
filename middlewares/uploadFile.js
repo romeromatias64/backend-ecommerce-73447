@@ -19,7 +19,7 @@ const uploadToS3 = async (file, folder) => {
 
     const params = {
         Bucket: process.env.S3_BUCKET,
-        Key: `${folder}/${uniqueName}`, // Ej: "users/99ba5d14-...jpg"
+        Key: `${folder}/${uniqueName}`,
         Body: file.buffer,
         ContentType: file.mimetype,
     };
@@ -32,9 +32,18 @@ const uploadToS3 = async (file, folder) => {
 const storage = multer.memoryStorage();
 
 // Middleware personalizado para detectar la ruta (users/products)
-const upload = multer({ storage }).fields([
-    { name: "avatar", maxCount: 1 },    // Para rutas de usuarios
-    { name: "image", maxCount: 1 },     // Para rutas de productos
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => { // Valida tipos de archivo
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Solo se permiten imágenes"), false);
+        }
+    }
+}).fields([
+    { name: "avatar", maxCount: 1 },    // Para usuarios
+    { name: "image", maxCount: 1 },     // Para productos
 ]);
 
 // Middleware final que sube a S3
