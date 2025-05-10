@@ -73,36 +73,69 @@ async function deleteUserByID(req, res) {
 
 async function updateUserByID(req, res) {
     try {
-        const { password, ...restData } = req.body;
-        const updateData = { ...restData, updatedAt: Date.now() };
+        // 1. Preparar datos de actualización
+        let updateData = {
+            ...req.body,
+            updatedAt: Date.now()
+        };
 
-        if(password) {
-            updateData.password = await bcrypt.hash(password, salt);
+        // 2. Manejar nueva imagen de avatar
+        if (req.fileData?.filename) {
+            updateData.avatar = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/users/${req.fileData.filename}`;
         }
 
+        // 3. Hashear nueva contraseña si existe
+        if (req.body.password) {
+            updateData.password = await bcrypt.hash(req.body.password, salt);
+        }
 
+        // 4. Actualizar el usuario en la base de datos
         const userUpdated = await User.findByIdAndUpdate(
             req.params.id,
-            { ...req.body, updatedAt: Date.now() },
-            { new: true }
+            updateData,
+            { 
+                new: true,
+                runValidators: true // Validar los nuevos datos contra el schema
+            }
         ).select("-password -__v");
 
+        // 5. Manejar caso de usuario no encontrado
         if (!userUpdated) {
             return res.status(404).send({
                 message: 'No se puede actualizar el usuario'
             });
         }
 
+        // 6. Preparar respuesta
+        const responseData = {
+            _id: userUpdated._id,
+            name: userUpdated.name,
+            email: userUpdated.email,
+            role: userUpdated.role,
+            avatar: userUpdated.avatar,
+            createdAt: userUpdated.createdAt,
+            updatedAt: userUpdated.updatedAt
+        };
+
+        // 7. Enviar respuesta
         return res.status(200).send({
-            message: `El usuario con la id: ${req.params.id} fue actualizado correctamente`,
-            userUpdated
+            message: `Usuario ${userUpdated.name} actualizado correctamente`,
+            user: responseData
         });
 
     } catch (error) {
-        console.log(error);
+        console.error("Error al actualizar usuario:", error);
+        
+        if (error.name === 'ValidationError') {
+            return res.status(400).send({
+                message: 'Error de validación',
+                errors: Object.values(error.errors).map(e => e.message)
+            });
+        }
+
         return res.status(500).send({
-            message: 'Error al actualizar el usuario',
-            error
+            message: 'Error interno al actualizar el usuario',
+            error: error.message
         });
     }
 }
