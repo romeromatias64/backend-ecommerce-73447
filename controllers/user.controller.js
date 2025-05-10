@@ -77,8 +77,6 @@ async function updateUserByID(req, res) {
             { new: true }
         ).select("-password -__v"); // Excluir campos sensibles
 
-        res.status(200).send(userUpdated); // Devolver el usuario completo actualizado
-
         if (!userUpdated) {
             return res.status(404).send({
                 message: 'No se puede actualizar el usuario'
