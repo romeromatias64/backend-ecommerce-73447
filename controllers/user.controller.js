@@ -138,29 +138,26 @@ async function createUser(req, res) {
 
 async function loginUser(req, res) {
     try {
-        // 1. Vamos a recibir desde la aplicacion un email y un password
+
         const { email, password } = req.body;
-        // a. Si no llega email o password, retornamos error 400
+        const user = await User.findOne({ email })
+
         if (!email || !password) {
             return res.status(400).send({
                 message: 'Email y contraseña son necesarios'
             });
         }
 
-        // 2. Vamos a buscar en nuestra DB si tenemos un usuario con dicho email
-        const user = await User.findOne({ email });
-
-        // a. No existe el usuario
         if (!user) {
             return res.status(404).send({
                 message: 'No existe el usuario'
             });
         }
-        // b. Existe y pasamos al punto 3
 
-        // 3. Vamos a comparar la contraseña que nos llega con la que tenemos en nuestra DB
+
+
         const isVerified = await bcrypt.compare(password, user.password);
-        // a. Credenciales incorrectas, retornar el error
+
         if (!isVerified) {
             return res.status(401).send({
                 message: 'Credenciales incorrectas'
@@ -170,14 +167,11 @@ async function loginUser(req, res) {
         const tokenData = { ...user.toJSON(), avatar: user.avatar || "https://www.utqiagvik.us/wp-content/uploads/2022/08/pngwing.com_.png" }
         
         user.password = undefined;
-        // b. Vamos a establecer o generar un token para que el usuario pueda corroborar en futuras peticiones que es el mismo usuario que se logueo
-        // Los token se utilizan para autenticar a un usuario y verificar su identidad
-        // En este caso vamos a usar JWT (JSON Web Token)
+   
         const token = jwt.sign(tokenData, SECRET, {
-            expiresIn: '1h' // El token va a expirar en 1 hora
+            expiresIn: '1h' 
         });
 
-        // 4. Retornamos el token y el usuario sin contraseña
         return res.status(200).send({
             message: 'Usuario logueado correctamente',
             user,
