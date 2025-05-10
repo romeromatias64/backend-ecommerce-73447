@@ -14,8 +14,11 @@ async function createOrder(req, res) {
             order: newOrder
         });
     } catch (error) {
+        res.status(400).send({ 
+            message: error.message,
+            error: true
+        });
         console.error(error);
-        res.status(400).send('Error al crear la orden:', error.message);
     }
 }
 
