@@ -16,6 +16,7 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'], // Headers permitidos
     credentials: true, // Permitir tokens
     preflightContinue: false, // Continuar con la siguiente función de middleware
+    exposedHeaders: ['Content-Length', 'X-Order-ID'], // Headers expuestos
 };
 
 app.use(cors(corsOptions));

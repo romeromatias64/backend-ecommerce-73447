@@ -15,18 +15,18 @@ async function createOrder(req, res) {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error al crear la orden');
+        res.status(400).send('Error al crear la orden:', error.message);
     }
 }
 
 async function checkOrderPrice(products) {
-    for(const product of products) {
-        const productDB = await Product.findById(product.product);
+    for(const item of products) {
+        const productDB = await Product.findById(item.product);
         if(!productDB) {
-            throw new Error('no se encontró el producto con ID: ' + product.product);
+            throw new Error('no se encontró el producto con ID: ' + item.product);
         }
-        if(productDB.price !== product.price) {
-            throw new Error('El precio del producto no coincide con el precio de la orden. ID: ' + product.product);
+        if(productDB.price !== item.price) {
+            throw new Error(`Precio modificado: ${productDB.name}`);
         }
 
     }
