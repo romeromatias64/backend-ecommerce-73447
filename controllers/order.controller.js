@@ -12,6 +12,7 @@ async function createOrder(req, res) {
 
         // Validar que los datos sean correctos
         if (!data.user || !Array.isArray(data.products) || data.products.length === 0) {
+            console.error("Datos inválidos para crear la orden:", data);
             return res.status(400).json({ message: 'Datos de la orden inválidos' });
         }
 
@@ -20,7 +21,8 @@ async function createOrder(req, res) {
         const order = new Order(data);
 
         // Validar precios
-        await checkOrderPrice(order.products);
+        await checkOrderPrice(order.products, data.total);
+        console.log("Precios validados correctamente");
 
         // Guardar la orden en la base de datos
         const newOrder = await order.save();
@@ -40,7 +42,7 @@ async function createOrder(req, res) {
     }
 }
 
-async function checkOrderPrice(products) {
+async function checkOrderPrice(products, orderTotal) {
     let calculatedTotal = 0;
 
     for(const item of products) {
@@ -62,8 +64,8 @@ async function checkOrderPrice(products) {
     }
 
     console.log("Total calculado:", calculatedTotal);
-    if(calculatedTotal !== products.total) {
-        throw new Error('El precio total no coincide con el calculado');
+    if(calculatedTotal !== orderTotal) {
+        throw new Error(`El precio total no coincide. Calculado: ${calculatedTotal}, Recibido: ${orderTotal}`);
     }
 }
 
