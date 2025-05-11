@@ -4,7 +4,19 @@ const Product = require('../models/product.model');
 
 async function createOrder(req, res) {
     try {
+        console.log("Headers:", req.headers);
+        console.log("Body:", req.body);
+        console.log("Usuario:", req.user);
+
         const data = req.body;
+
+        // Validar que los datos sean correctos
+        if (!data.user || !Array.isArray(data.products) || data.products.length === 0) {
+            return res.status(400).json({ message: 'Datos de la orden inválidos' });
+        }
+
+        console.log("Datos recibidos para crear la orden:", data);
+
         const order = new Order(data);
 
         // Validar precios
@@ -29,7 +41,11 @@ async function createOrder(req, res) {
 }
 
 async function checkOrderPrice(products) {
+    let calculatedTotal = 0;
+
     for(const item of products) {
+        console.log("Validando producto:", item);
+
         if(!mongoose.Types.ObjectId.isValid(item.product)) {
             throw new Error('ID de producto inválido: ' + item.product);
         }
@@ -42,6 +58,12 @@ async function checkOrderPrice(products) {
             throw new Error(`Precio modificado: ${productDB.name}`);
         }
 
+        calculatedTotal += productDB.price * item.quantity;
+    }
+
+    console.log("Total calculado:", calculatedTotal);
+    if(calculatedTotal !== products.total) {
+        throw new Error('El precio total no coincide con el calculado');
     }
 }
 
